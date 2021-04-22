@@ -1,18 +1,22 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="container">
+    <h3 class="center-align">COVID statistik</h3>
+    <br>
+    <p class="flow-text">Sammanfattning av samtliga COVID-19 fall i Sverige, till dagens datum ({{ date }}), statistik samlad från <a href="https://apify.com/covid-19" target="_blank">denna COVID-API</a>.</p>
+    <latest-update-chart></latest-update-chart>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import LatestUpdateChart from "@/components/charts/LatestUpdateChart.vue";
 
 export default {
+  components: { LatestUpdateChart },
   name: "Home",
-  components: {
-    HelloWorld,
-  },
+  data(){
+    return {
+      date: new Date(Date.now()).toLocaleDateString('sv-SE')
+    }
+  }
 };
 </script>
