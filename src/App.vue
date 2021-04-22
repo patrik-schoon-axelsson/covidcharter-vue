@@ -4,12 +4,14 @@
     <router-link to="/">Dagens</router-link> |
     <router-link to="/History">Historisk översikt</router-link>
   </div>
-  <router-view />
+  <router-view></router-view>
 </div>
 </template>
 
 <script>
+export default {
 
+}
 </script>
 
 <style lang="scss">

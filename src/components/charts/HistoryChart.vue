@@ -9,14 +9,21 @@
 </div>
 <div v-else>
   <canvas id="newestDataChart"></canvas>
+  <br>
+  <div class="row">
+    <base-datepicker name="minDate" placeholder="Första datum"></base-datepicker>
+    <base-datepicker name="maxDate" placeholder="Sista datum"></base-datepicker>
+  </div>
 </div>
 </template>
 
 <script>
 import Chart from 'chart.js/auto';
+import BaseDatepicker from '@/components/base/BaseDatepicker.vue';
 
 export default {
     name: 'History Chart',
+    components: { BaseDatepicker },
     data(){
     return {
       isLoading: false,
@@ -35,6 +42,9 @@ export default {
         
         return this.dateObjs.filter((item) => item.date.getMonth() == thisMonth && item.date.getFullYear() == thisYear && item.infected > 0); 
       },
+  },
+  created(){
+
   },
   mounted() {    
     
