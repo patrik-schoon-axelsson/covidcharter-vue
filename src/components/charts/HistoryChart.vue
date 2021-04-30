@@ -54,9 +54,7 @@ export default {
 
   },
   mounted() {    
-    
     this.fetchFreshData();
-    
   },
   methods: {
     ...mapMutations({

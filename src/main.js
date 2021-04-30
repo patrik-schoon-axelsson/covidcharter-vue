@@ -6,7 +6,6 @@ import router from "./router";
 import store from "./store";
 import 'materialize-css/dist/css/materialize.min.css';
 
-
 let app = createApp(App);
 
 app.use(store);

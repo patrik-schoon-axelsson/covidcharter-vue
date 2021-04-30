@@ -1,5 +1,6 @@
 <template>
-  <div class="col s12 m6">
+  <div class="input-field col s12 m6">
+    <i class="material-icons prefix">date_range</i>
     <input :value="[this.name == 'minDate' ? this.getMinDate : this.getMaxDate ]" type="text" :name="name" :placeholder="placeholder" class="datepicker" @change="setDateState">
   </div>
   
@@ -17,16 +18,19 @@ export default {
             inputDate: ''
         }
     },
-    mounted() {
-      M.AutoInit();
+    mounted() {   
+      M.Datepicker.init(document.querySelectorAll('.datepicker'), {
+        autoClose: true,
+        format: 'm-dd-yyyy',
+        minDate: new Date('3-15-2020'),
+        maxDate: new Date(),
+      });
     },
     methods: {
     setDateState(event){
       if(this.name == 'minDate'){
-        console.log(event.target.value)
         this.filterMin(event.target.value)
       } else if (this.name == 'maxDate') {
-        console.log(event.target.value)
         this.filterMax(event.target.value)
       }
     },
