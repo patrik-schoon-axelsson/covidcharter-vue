@@ -14,12 +14,15 @@
     <base-datepicker name="minDate" placeholder="Första datum"></base-datepicker>
     <base-datepicker name="maxDate" placeholder="Sista datum"></base-datepicker>
   </div>
+  <button @click="filterFetchedData">Log filters </button>
 </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import Chart from 'chart.js/auto';
 import BaseDatepicker from '@/components/base/BaseDatepicker.vue';
+
 
 export default {
     name: 'History Chart',
@@ -28,13 +31,17 @@ export default {
     return {
       isLoading: false,
       fetchData: {},
-      labels: [],
       dateObjs: []
     }
   },
   computed: {
+      minDate(){
+        return this.$store.getters.getMinDate;
+      },
+      maxDate(){
+        return this.$store.getters.getMaxDate;
+      },
       sortedDates(){
-        
         // Filters for items from this month. Filters out entries that have no statistics.
         
         let thisMonth = new Date().getMonth();
@@ -52,7 +59,11 @@ export default {
     
   },
   methods: {
-    async fetchFreshData() {
+    ...mapMutations({
+        filterMin: 'filterMinDate',
+        filterMax: 'filterMaxDate'
+    }),
+    fetchFreshData() {
       this.isLoading = true;
       
       this.axios.get('https://api.apify.com/v2/datasets/Nq3XwHX262iDwsFJS/items?format=json&clean=1')
@@ -80,7 +91,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          });
+        });
     },
     drawChart() {
         
@@ -112,6 +123,12 @@ export default {
 
         chart.render();   
     },
+    filterFetchedData() {
+      let maxFilterDate = new Date(this.maxDate).getTime()
+      let minFilterDate = new Date(this.minDate).getTime()
+
+      console.log(this.fetchData.filter((item) => (new Date(item.lastUpdatedAtApify).getTime() <= maxFilterDate) && (new Date(item.lastUpdatedAtApify).getTime() >= minFilterDate)));  
+    }
   }
 }
 </script>
