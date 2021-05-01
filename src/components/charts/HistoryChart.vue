@@ -31,7 +31,9 @@ export default {
     return {
       isLoading: false,
       fetchData: {},
-      dateObjs: []
+      dateObjs: [],
+      filterArray: [],
+      chart: null
     }
   },
   computed: {
@@ -95,7 +97,7 @@ export default {
         
         const ctx = document.getElementById('newestDataChart').getContext('2d');
         
-        let chart = new Chart(ctx, {
+        this.chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: this.sortedDates.map(i => i.date.toLocaleDateString('sv-SE')),
@@ -105,7 +107,7 @@ export default {
                     data: this.sortedDates.map(i => i.infected)
                   }]
             },
-             options: {
+            options: {
                   responsive: true,
                   plugins: {
                     legend: {
@@ -119,13 +121,56 @@ export default {
               }
           });
 
-        chart.render();   
+        this.chart.render();   
+    },
+    redrawChart(filteredData) {
+      const ctx = document.getElementById('newestDataChart').getContext('2d');
+      this.chart.destroy();
+
+      this.chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: filteredData.map(i => new Date(i.lastUpdatedAtApify).toLocaleDateString('sv-SE')),
+                datasets: [{         
+                    label: 'Infektioner',
+                    backgroundColor: 'rgb(250, 147, 140)',
+                    data: filteredData.map(i => i.infected)
+                  },
+                  {
+                    label: 'Avlidna',
+                    backgroundColor: 'rgb(255, 0, 0)',
+                    data: filteredData.map(i => i.deceased)
+                  },
+                  {
+                    label: 'Intensivvård',
+                    backgroundColor: 'rgb(133, 0, 0)',
+                    data: filteredData.map(i => i.intensiveCare)
+                  }]
+            },
+            options: {
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      position: 'top',
+                    },
+                  title: {
+                    display: true,
+                    text: `Statistik för perioden ${this.minDate} till ${this.maxDate}`
+                  }
+                }
+              }
+      });
+      
+      
+      this.chart.render();
     },
     filterFetchedData() {
       let maxFilterDate = new Date(this.maxDate).getTime()
       let minFilterDate = new Date(this.minDate).getTime()
 
-      console.log(this.fetchData.filter((item) => (new Date(item.lastUpdatedAtApify).getTime() <= maxFilterDate) && (new Date(item.lastUpdatedAtApify).getTime() >= minFilterDate)));  
+      this.filterArray = this.fetchData.filter((item) => (new Date(item.lastUpdatedAtApify).getTime() <= maxFilterDate) && (new Date(item.lastUpdatedAtApify).getTime() >= minFilterDate)); 
+
+      this.redrawChart(this.filterArray);
     }
   }
 }

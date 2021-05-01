@@ -19,6 +19,7 @@ export default {
         }
     },
     mounted() {   
+      // Setting up the datepicker on mount, with custom options.
       M.Datepicker.init(document.querySelectorAll('.datepicker'), {
         autoClose: true,
         format: 'm-dd-yyyy',
